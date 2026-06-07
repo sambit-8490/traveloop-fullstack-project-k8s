@@ -1,0 +1,58 @@
+const express = require('express');
+const router = express.Router();
+
+const cities = [
+  { id: 1, name: 'Mumbai', country: 'India', region: 'Asia', popularity: 95, costIndex: 65, mood: ['food', 'nightlife'], image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=600', description: 'City of Dreams — financial capital with iconic landmarks', attractions: ['Gateway of India', 'Marine Drive', 'Elephanta Caves', 'Juhu Beach'] },
+  { id: 2, name: 'Delhi', country: 'India', region: 'Asia', popularity: 90, costIndex: 55, mood: ['cultural', 'food'], image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=600', description: 'Heart of India — a blend of history and modernity', attractions: ['Red Fort', 'Qutub Minar', 'India Gate', 'Humayun Tomb'] },
+  { id: 3, name: 'Goa', country: 'India', region: 'Asia', popularity: 92, costIndex: 60, mood: ['relaxation', 'adventure', 'nightlife'], image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=600', description: 'Beach Paradise — sun, sand and vibrant nightlife', attractions: ['Baga Beach', 'Dudhsagar Falls', 'Old Goa Churches', 'Anjuna Flea Market'] },
+  { id: 4, name: 'Jaipur', country: 'India', region: 'Asia', popularity: 88, costIndex: 45, mood: ['cultural', 'adventure'], image: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=600', description: 'Pink City — royal palaces and vibrant bazaars', attractions: ['Amber Fort', 'Hawa Mahal', 'City Palace', 'Jantar Mantar'] },
+  { id: 5, name: 'Chennai', country: 'India', region: 'Asia', popularity: 82, costIndex: 50, mood: ['food', 'cultural'], image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=600', description: 'Gateway to South India — temples and coastal beauty', attractions: ['Marina Beach', 'Kapaleeshwarar Temple', 'Fort St. George', 'Mahabalipuram'] },
+  { id: 6, name: 'Manali', country: 'India', region: 'Asia', popularity: 89, costIndex: 55, mood: ['adventure', 'nature'], image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=600', description: 'Adventure Capital — snow peaks and thrilling sports', attractions: ['Rohtang Pass', 'Solang Valley', 'Hadimba Temple', 'Beas River'] },
+  { id: 7, name: 'Varanasi', country: 'India', region: 'Asia', popularity: 85, costIndex: 40, mood: ['cultural', 'relaxation'], image: 'https://images.unsplash.com/photo-1609766857041-ed402ea8069a?w=600', description: 'Spiritual Capital — the oldest living city on earth', attractions: ['Dashashwamedh Ghat', 'Kashi Vishwanath Temple', 'Sarnath', 'Assi Ghat'] },
+  { id: 8, name: 'Udaipur', country: 'India', region: 'Asia', popularity: 87, costIndex: 50, mood: ['relaxation', 'cultural'], image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?w=600', description: 'City of Lakes — romantic palaces and serene waters', attractions: ['Lake Pichola', 'City Palace', 'Jag Mandir', 'Saheliyon ki Bari'] },
+  { id: 9, name: 'Rishikesh', country: 'India', region: 'Asia', popularity: 86, costIndex: 45, mood: ['adventure', 'nature'], image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=600', description: 'Yoga Capital — adventure sports and spiritual retreats', attractions: ['Laxman Jhula', 'River Rafting', 'Triveni Ghat', 'Beatles Ashram'] },
+  { id: 10, name: 'Kolkata', country: 'India', region: 'Asia', popularity: 80, costIndex: 45, mood: ['cultural', 'food'], image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600', description: 'City of Joy — colonial heritage and artistic culture', attractions: ['Victoria Memorial', 'Howrah Bridge', 'Dakshineswar Temple', 'Park Street'] },
+  { id: 11, name: 'Shimla', country: 'India', region: 'Asia', popularity: 84, costIndex: 55, mood: ['nature', 'relaxation'], image: 'https://images.unsplash.com/photo-1597074866923-dc0589150358?w=600', description: 'Queen of Hills — colonial charm and mountain views', attractions: ['The Ridge', 'Jakhu Temple', 'Kufri', 'Mall Road'] },
+  { id: 12, name: 'Agra', country: 'India', region: 'Asia', popularity: 91, costIndex: 45, mood: ['cultural'], image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600', description: 'City of Taj — home to one of the Seven Wonders', attractions: ['Taj Mahal', 'Agra Fort', 'Fatehpur Sikri', 'Mehtab Bagh'] },
+  { id: 13, name: 'Darjeeling', country: 'India', region: 'Asia', popularity: 83, costIndex: 50, mood: ['nature', 'relaxation'], image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=600', description: 'Queen of the Hills — tea gardens and Himalayan views', attractions: ['Tiger Hill', 'Batasia Loop', 'Tea Gardens', 'Himalayan Railway'] },
+  { id: 14, name: 'Amritsar', country: 'India', region: 'Asia', popularity: 86, costIndex: 40, mood: ['cultural', 'food'], image: 'https://images.unsplash.com/photo-1609766857041-ed402ea8069a?w=600', description: 'Holy City — spiritual heart of the Sikh faith', attractions: ['Golden Temple', 'Wagah Border', 'Jallianwala Bagh', 'Durgiana Temple'] },
+  { id: 15, name: 'Mysuru', country: 'India', region: 'Asia', popularity: 81, costIndex: 42, mood: ['cultural', 'nature'], image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=600', description: 'City of Palaces — royal heritage and sandalwood', attractions: ['Mysore Palace', 'Chamundi Hills', 'Brindavan Gardens', 'Devaraja Market'] },
+  { id: 16, name: 'Ooty', country: 'India', region: 'Asia', popularity: 79, costIndex: 48, mood: ['nature', 'relaxation'], image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=600', description: 'Queen of Hill Stations — tea estates and toy train', attractions: ['Ooty Lake', 'Botanical Gardens', 'Doddabetta Peak', 'Nilgiri Mountain Railway'] },
+  { id: 17, name: 'Coorg', country: 'India', region: 'Asia', popularity: 78, costIndex: 52, mood: ['nature', 'relaxation', 'adventure'], image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=600', description: 'Scotland of India — coffee plantations and waterfalls', attractions: ['Abbey Falls', 'Raja Seat', 'Namdroling Monastery', 'Dubare Elephant Camp'] },
+  { id: 18, name: 'Leh', country: 'India', region: 'Asia', popularity: 88, costIndex: 65, mood: ['adventure', 'nature'], image: 'https://images.unsplash.com/photo-1597074866923-dc0589150358?w=600', description: 'Land of High Passes — dramatic landscapes and monasteries', attractions: ['Pangong Lake', 'Nubra Valley', 'Thiksey Monastery', 'Magnetic Hill'] },
+  { id: 19, name: 'Jodhpur', country: 'India', region: 'Asia', popularity: 82, costIndex: 43, mood: ['cultural', 'adventure'], image: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=600', description: 'Blue City — majestic forts and azure-painted houses', attractions: ['Mehrangarh Fort', 'Jaswant Thada', 'Clock Tower', 'Umaid Bhawan Palace'] },
+  { id: 20, name: 'Pushkar', country: 'India', region: 'Asia', popularity: 76, costIndex: 35, mood: ['cultural', 'relaxation'], image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600', description: 'Holy Lake City — sacred ghats and camel fair', attractions: ['Pushkar Lake', 'Brahma Temple', 'Savitri Temple', 'Camel Fair Ground'] },
+  { id: 21, name: 'Hampi', country: 'India', region: 'Asia', popularity: 80, costIndex: 35, mood: ['cultural', 'adventure'], image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600', description: 'Ruins of Vijayanagara — UNESCO World Heritage Site', attractions: ['Virupaksha Temple', 'Vittala Temple', 'Elephant Stables', 'Matanga Hill'] },
+  { id: 22, name: 'Munnar', country: 'India', region: 'Asia', popularity: 81, costIndex: 50, mood: ['nature', 'relaxation'], image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=600', description: 'Tea Capital of South India — misty hills and valleys', attractions: ['Eravikulam National Park', 'Tea Museum', 'Mattupetty Dam', 'Top Station'] },
+  { id: 23, name: 'Alleppey', country: 'India', region: 'Asia', popularity: 83, costIndex: 48, mood: ['relaxation', 'nature'], image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=600', description: 'Venice of the East — backwaters and houseboat cruises', attractions: ['Alleppey Backwaters', 'Houseboat Cruise', 'Alappuzha Beach', 'Krishnapuram Palace'] },
+  { id: 24, name: 'Pondicherry', country: 'India', region: 'Asia', popularity: 79, costIndex: 45, mood: ['relaxation', 'cultural'], image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=600', description: 'French Riviera of the East — colonial charm and beaches', attractions: ['Promenade Beach', 'Auroville', 'French Quarter', 'Sri Aurobindo Ashram'] },
+  { id: 25, name: 'Spiti Valley', country: 'India', region: 'Asia', popularity: 75, costIndex: 55, mood: ['adventure', 'nature'], image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=600', description: 'Cold Desert Mountain Valley — remote and breathtaking', attractions: ['Key Monastery', 'Chandratal Lake', 'Kaza', 'Pin Valley National Park'] },
+  { id: 26, name: 'Andaman Islands', country: 'India', region: 'Asia', popularity: 85, costIndex: 70, mood: ['adventure', 'relaxation'], image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=600', description: 'Tropical Paradise — pristine beaches and coral reefs', attractions: ['Radhanagar Beach', 'Cellular Jail', 'Havelock Island', 'Scuba Diving'] },
+  { id: 27, name: 'Hyderabad', country: 'India', region: 'Asia', popularity: 83, costIndex: 52, mood: ['food', 'cultural'], image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=600', description: 'City of Nizams — biryani capital and tech hub', attractions: ['Charminar', 'Golconda Fort', 'Hussain Sagar', 'Ramoji Film City'] },
+  { id: 28, name: 'Bengaluru', country: 'India', region: 'Asia', popularity: 84, costIndex: 60, mood: ['nightlife', 'food'], image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=600', description: 'Silicon Valley of India — gardens and vibrant pub scene', attractions: ['Lalbagh', 'Cubbon Park', 'ISKCON Temple', 'UB City'] },
+  { id: 29, name: 'Kochi', country: 'India', region: 'Asia', popularity: 80, costIndex: 48, mood: ['cultural', 'food'], image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600', description: 'Queen of the Arabian Sea — spice trade heritage', attractions: ['Chinese Fishing Nets', 'Fort Kochi', 'Mattancherry Palace', 'Jew Town'] },
+  { id: 30, name: 'Nainital', country: 'India', region: 'Asia', popularity: 82, costIndex: 50, mood: ['nature', 'relaxation'], image: 'https://images.unsplash.com/photo-1597074866923-dc0589150358?w=600', description: 'Lake District of India — serene Himalayan lake town', attractions: ['Naini Lake', 'Snow View Point', 'Naina Devi Temple', 'Mall Road'] },
+];
+
+router.get('/', (req, res) => {
+  let result = [...cities];
+  const { search, region, mood, sort } = req.query;
+  if (search) result = result.filter(c => c.name.toLowerCase().includes(search.toLowerCase()) || c.country.toLowerCase().includes(search.toLowerCase()));
+  if (region) result = result.filter(c => c.region === region);
+  if (mood) result = result.filter(c => c.mood.includes(mood));
+  if (sort === 'popularity') result.sort((a, b) => b.popularity - a.popularity);
+  if (sort === 'cost_low') result.sort((a, b) => a.costIndex - b.costIndex);
+  res.json(result);
+});
+
+router.get('/names', (req, res) => {
+  res.json(cities.map(c => c.name).sort());
+});
+
+router.get('/:id', (req, res) => {
+  const city = cities.find(c => c.id === parseInt(req.params.id));
+  if (!city) return res.status(404).json({ message: 'City not found' });
+  res.json(city);
+});
+
+module.exports = router;
