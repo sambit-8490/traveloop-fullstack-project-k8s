@@ -1,27 +1,16 @@
-# Build Stage
-FROM node:22-alpine AS builder
+FROM node:20-alpine
 
+# Set working directory
 WORKDIR /app
 
+# Install dependencies
 COPY package*.json ./
-
 RUN npm install
 
+# Copy project files
 COPY . .
 
-ARG REACT_APP_API_URL
-ENV REACT_APP_API_URL=$REACT_APP_API_URL
+EXPOSE 5173
 
-RUN npm run build
-
-
-
-
-# Production Stage
-FROM nginx:alpine
-
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+# Start in development mode
+CMD ["npm", "run", "dev", "--", "--host"]
